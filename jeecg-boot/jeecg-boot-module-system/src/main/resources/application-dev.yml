@@ -33,9 +33,18 @@ spring:
             required: true
   ## quartz定时任务,采用数据库方式
   quartz:
-    job-store-type: jdbc #数据库方式
-    jdbc:
-      initialize-schema: never #不初始化表结构
+    #相关属性配置
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: quartzScheduler
+            instanceId: AUTO
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 10
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
   #json 时间戳统一转换
   jackson:
     date-format:   yyyy-MM-dd HH:mm:ss
@@ -123,7 +132,10 @@ spring:
     port: 6379
 #mybatis plus 设置
 mybatis-plus:
-  mapper-locations: classpath*:org/jeecg/modules/**/xml/*Mapper.xml
+  # 如果是放在src/main/java目录下 classpath:/com/yourpackage/*/mapper/*Mapper.xml
+  # 如果是放在resource目录 classpath:/mapper/*Mapper.xml
+  mapper-locations: classpath:org/jeecg/modules/**/*Mapper.xml
+  typeAliasesPackage: org.jeecg.**.entity
   global-config:
     # 关闭MP3.0自带的banner
     banner: false
